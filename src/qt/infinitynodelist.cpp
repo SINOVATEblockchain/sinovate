@@ -1881,8 +1881,7 @@ std::map<std::string, pair_burntx> InfinitynodeList::nodeSetupGetUnusedBurnTxs( 
 
     if (pwallet==nullptr)   return ret;
 
-    LOCK2(cs_main, pwallet->cs_wallet);
-
+    LOCK(pwallet->cs_wallet);
     const CWallet::TxItems & txOrdered = pwallet->wtxOrdered;
 
     // iterate backwards until we reach >1 yr to return:
@@ -1910,12 +1909,10 @@ std::map<std::string, pair_burntx> InfinitynodeList::nodeSetupGetUnusedBurnTxs( 
                 strNodeType = nodeSetupGetNodeType(roundAmount);
 
                 description = strNodeType.toStdString() + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData() + " " + txHash.substr(0, 8);
-//LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
                 ret.insert( { txHash,  std::make_pair(confirms, description) } );
             }
         }
     }
-
     return ret;
 }
 
